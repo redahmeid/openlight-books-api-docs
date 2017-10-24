@@ -1,0 +1,133 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Books API
+  description: API for Books
+  
+paths:
+  /books:
+    # In this operation we do not apply the security, because it was applied globally above.
+    # The security will be applied to this operation for that reason.
+    get:
+      summary: List books
+      description: Get a list of books. By default, these are sorted by most recent and limited to 100
+      parameters: 
+        - in: query
+          name: sort
+          type: string
+          description: Sort by string. Values can be date, name, ratings
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              body:
+                type: object
+                properties:
+                  books:
+                    type: array
+                    description: List of books
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        image:
+                          type: string
+                        completion:
+                          type: number
+                        rating: 
+                          type: number
+                        self:
+                          type: string
+              links:
+                $ref: "#/definitions/Links"
+      produces: 
+        - application/json
+    post:
+      summary: Create a book
+      description: Create a book - must be logged on
+      parameters: 
+        - in: body
+          name: book
+          schema:
+            $ref: "#/definitions/Book"
+      responses:
+        201:
+          description: Created
+          schema:
+            type: object
+            properties:
+              body:
+                type: object
+                properties:
+                  self:
+                    type: string
+                    description: Link to created book
+              links:
+                $ref: "#/definitions/Links"
+      produces: 
+        - application/json
+  /books/{bookid}:
+    parameters: 
+    - in: path
+      name: bookid
+      type: string
+      description: ID of book
+      required: true
+    get:
+      summary: Return a book
+      description: Get a list of books. By default, these are sorted by most recent and limited to 100
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/BookResponse"
+      produces: 
+        - application/json
+        
+definitions:
+  Links:
+    type: array
+    description: Actions
+    items:
+      type: object
+      properties:
+        rel:
+          type: string
+        link: 
+          type: string
+        method:
+          type: string
+  Book:
+    type: object
+    description: Book model
+    properties:
+      name:
+        type: string
+      image:
+        type: string
+      completion:
+        type: number
+      rating: 
+        type: number
+  BookResponse:
+    type: object
+    description: Book Response
+    properties:
+      body:
+        $ref: "#/definitions/Book"
+      links:
+        $ref: "#/definitions/Links"
+# Added by API Auto Mocking Plugin
+# host: api.openlight.io
+# basePath: /
+schemes:
+ - https
+# Added by API Auto Mocking Plugin
+# host: api.openlight.io
+# basePath: /
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /openlight/books/1.0.0
